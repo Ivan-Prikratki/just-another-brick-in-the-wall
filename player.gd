@@ -1,6 +1,5 @@
 extends CharacterBody2D
 
-@onready var stat_monitor := get_node("Camera2D").get_node("Stat Monitor")
 @onready var movement_noise := get_node("MovementNoise")
 
 const SPEED := 150.0
@@ -84,7 +83,6 @@ func _physics_process(delta: float) -> void:
 	
 	# Finalise movement
 	move_and_slide()
-	stat_monitor.text = "H: " + str(velocity.x) + "\nV: " + str(-velocity.y) + "\nOn floor: " + str(is_on_floor()) + "\nWall sliding: " + str(is_wall_sliding())
 	
 	# Modify movement sfx
 	var pitch_ratio = clamp(abs(velocity.length()) / SPEED, 0.0, 1.7)/1.7
