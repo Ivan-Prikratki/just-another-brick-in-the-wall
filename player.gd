@@ -13,6 +13,7 @@ var turn_boost_on := false
 var direction = 0.0
 var jump_coyote_time = 0.0
 var air_timeout = 0.0
+@export var key_collected := false
 
 func is_wall_sliding() -> bool:
 	return is_on_wall_only() and \

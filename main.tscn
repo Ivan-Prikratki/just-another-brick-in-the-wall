@@ -4,6 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://bicpedx3anp1w" path="res://player.png" id="2_1bvp3"]
 [ext_resource type="AudioStream" uid="uid://cvlycra3wvh2n" path="res://rock_sliding.ogg" id="3_1bvp3"]
 [ext_resource type="Texture2D" uid="uid://d33yyxie6qiy4" path="res://tilemap.png" id="3_h2yge"]
+[ext_resource type="Script" uid="uid://p8q17bv5hj3u" path="res://key.gd" id="5_7mycd"]
+[ext_resource type="Texture2D" uid="uid://bhrq8ocpsigjw" path="res://key.png" id="6_272bh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ilxo7"]
 size = Vector2(40.000008, 79.999535)
@@ -143,6 +145,9 @@ texture = ExtResource("3_h2yge")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_7mycd")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uj8ga"]
+size = Vector2(16, 16)
+
 [node name="Node" type="Node" unique_id=1401328817]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=1414124023]
@@ -198,3 +203,16 @@ offset_bottom = 235.5
 theme_override_font_sizes/normal_font_size = 11
 bbcode_enabled = true
 text = "Seems to be a dead end, better [color=yellow]turn around[/color]."
+
+[node name="Key" type="Area2D" parent="." unique_id=1133618493]
+position = Vector2(2704, -112)
+scale = Vector2(2, 2)
+script = ExtResource("5_7mycd")
+
+[node name="Sprite2D" type="Sprite2D" parent="Key" unique_id=1066057349]
+texture = ExtResource("6_272bh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Key" unique_id=99580422]
+shape = SubResource("RectangleShape2D_uj8ga")
+
+[connection signal="body_entered" from="Key" to="Key" method="_on_body_entered"]
