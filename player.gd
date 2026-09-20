@@ -14,6 +14,7 @@ var direction = 0.0
 var jump_coyote_time = 0.0
 var air_timeout = 0.0
 @export var key_collected := false
+@export var game_won := false
 
 func is_wall_sliding() -> bool:
 	return is_on_wall_only() and \
@@ -44,6 +45,7 @@ func _physics_process(delta: float) -> void:
 		air_timeout = 0.2
 	# Other jumps
 	elif Input.is_action_just_pressed("jump") and (is_on_floor() or jump_coyote_time > 0):
+		jump_coyote_time = 0
 		# Boost jump
 		if abs(velocity.x) >= SPEED*1.1:
 			velocity.y = JUMP*1.2 # If speed is 10% more than max, jump 20% more
@@ -81,6 +83,10 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, direction * SPEED, SPEED/6.0)
 		turn_boost_timer = 0.5;
 		turn_boost_on = false;
+	
+	if game_won:
+		velocity.y = 0.0
+		velocity.x = 0.0
 	
 	# Finalise movement
 	move_and_slide()

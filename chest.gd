@@ -1,7 +1,7 @@
 extends Area2D
 
+@onready var label := get_node("winText")
 @onready var sound := get_node("AudioStreamPlayer2D")
-@onready var sprite := get_node("Sprite2D")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -9,9 +9,7 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D:
-		if not body.key_collected:
-			body.key_collected = true
-			sprite.visible = false
+		if body.key_collected:
+			body.game_won = true
+			label.visible = true
 			sound.play()
-			await sound.finished
-			queue_free()
