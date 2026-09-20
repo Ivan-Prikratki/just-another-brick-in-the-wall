@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 @onready var stat_monitor := get_node("Camera2D").get_node("Stat Monitor")
+@onready var movement_noise := get_node("MovementNoise")
 
 const SPEED := 150.0
 const TURN_BOOST := 100.0
@@ -15,8 +16,8 @@ var jump_coyote_time = 0.0
 var air_timeout = 0.0
 
 func is_wall_sliding() -> bool:
-	# ADD MOVEMENT DIRECTION CHECK
-	return is_on_wall_only()
+	return is_on_wall_only() and \
+	(sign(Input.get_axis("left", "right")) == -sign(get_wall_normal().x))
 
 func _physics_process(delta: float) -> void:
 	# Get movement direction
@@ -83,4 +84,15 @@ func _physics_process(delta: float) -> void:
 	
 	# Finalise movement
 	move_and_slide()
-	stat_monitor.text = "H: " + str(velocity.x) + "\nV: " + str(-velocity.y)
+	stat_monitor.text = "H: " + str(velocity.x) + "\nV: " + str(-velocity.y) + "\nOn floor: " + str(is_on_floor()) + "\nWall sliding: " + str(is_wall_sliding())
+	
+	# Modify movement sfx
+	var pitch_ratio = clamp(abs(velocity.length()) / SPEED, 0.0, 1.7)/1.7
+	movement_noise.pitch_scale = lerp(0.7, 1.2, pitch_ratio)
+	
+	var volume_ratio = clamp(abs(velocity.length()) / SPEED, 0.0, 1.0)
+	movement_noise.volume_linear = lerp(0.0, 0.5, volume_ratio)
+	
+	# Mute if in the air
+	if not (is_on_floor() or is_wall_sliding()):
+		movement_noise.volume_linear = 0.0
