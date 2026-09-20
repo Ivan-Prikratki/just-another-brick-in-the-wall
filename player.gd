@@ -5,7 +5,7 @@ extends CharacterBody2D
 const SPEED := 150.0
 const TURN_BOOST := 100.0
 const JUMP := -300.0
-const JUMP_EXTRA := -450.0
+const JUMP_EXTRA := -550.0
 const WALL_SLIDE := 50.0
 var jump_timer := 0.0;
 var turn_boost_timer := 0.0
@@ -34,16 +34,21 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 	
 	if is_wall_sliding() or is_on_floor():
-		jump_coyote_time = 0
+		jump_coyote_time = 0.2
 
 	# Wall jump
 	if Input.is_action_just_pressed("jump") and is_wall_sliding():
 		velocity.y = JUMP * 2/3
 		velocity.x = -direction*SPEED
 		air_timeout = 0.2
-	# Basic jump
-	elif Input.is_action_just_pressed("jump") and (is_on_floor() or jump_coyote_time < 0.2):
-		velocity.y = JUMP
+	# Other jumps
+	elif Input.is_action_just_pressed("jump") and (is_on_floor() or jump_coyote_time > 0):
+		# Boost jump
+		if abs(velocity.x) >= SPEED*1.1:
+			velocity.y = JUMP*1.2 # If speed is 10% more than max, jump 20% more
+		# Basic jump
+		else:
+			velocity.y = JUMP
 	
 	if Input.is_action_pressed("jump") and jump_timer >= 0 and velocity.y < 0 and not is_wall_sliding():
 		velocity.y += JUMP_EXTRA*delta 
